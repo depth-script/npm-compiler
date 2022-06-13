@@ -1,0 +1,26 @@
+{
+  "name": "depthscript-compiler",
+  "version": "0.0.0",
+  "description": "The transpiler for the DepthScript language",
+  "main": "dsc.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/depth-script/npm-compiler.git"
+  },
+  "keywords": [
+    "depthscript",
+    "transpiler"
+  ],
+  "author": "DepthScript",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/depth-script/npm-compiler/issues"
+  },
+  "homepage": "https://github.com/depth-script/npm-compiler#readme",
+  "bin": {
+    "dsc": "./dsc.js"
+  }
+}
