@@ -36,11 +36,64 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var e_1, _a;
 exports.__esModule = true;
 var args = process.argv.slice(2);
 var fs = require('fs');
 var path = require('path');
 var p;
+var flags = {};
+try {
+    for (var _b = __values(args.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
+        var _d = __read(_c.value, 2), arg = _d[0], argval = _d[1];
+        if (!argval.startsWith('-'))
+            continue;
+        if (argval.startsWith("--"))
+            flags[argval.slice(2)] = args[Number(arg) + 1];
+        else if (argval.startsWith('-'))
+            flags[argval.slice(1)] = true;
+    }
+}
+catch (e_1_1) { e_1 = { error: e_1_1 }; }
+finally {
+    try {
+        if (_c && !_c.done && (_a = _b["return"])) _a.call(_b);
+    }
+    finally { if (e_1) throw e_1.error; }
+}
+// for (let arg in args) {
+//     let argval = args[arg];
+//     if (!argval.startsWith('-')) continue;
+//     if (argval.startsWith("--")) flags[argval.slice(2)] = args[Number(arg) + 1];
+//     else if (argval.startsWith('-')) flags[argval.slice(1)] = true;
+// }
 if (RegExp("^C:[/\\\\]").test(args[0]))
     p = args[0];
 else if (args[0] === '')
@@ -65,7 +118,7 @@ function readfile(path) {
     });
 }
 (function () { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, _b, e_1, _c, _d;
+    var _a, _b, e_2, _c, _d;
     return __generator(this, function (_e) {
         switch (_e.label) {
             case 0: return [4 /*yield*/, readfile(filepath)];
@@ -80,7 +133,7 @@ function readfile(path) {
                 config = _b.apply(_a, [_e.sent()]);
                 return [3 /*break*/, 6];
             case 4:
-                e_1 = _e.sent();
+                e_2 = _e.sent();
                 _d = (_c = JSON).parse;
                 return [4 /*yield*/, readfile(path.join("./", path.dirname(filepath), "/.dscconfig.json"))];
             case 5:
@@ -90,6 +143,7 @@ function readfile(path) {
                 ;
                 console.log(file);
                 console.log(config);
+                console.log(flags);
                 return [2 /*return*/];
         }
     });

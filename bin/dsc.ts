@@ -2,13 +2,30 @@
 "use strict";
 
 import { rejects } from "assert";
+import { type } from "os";
 import { allowedNodeEnvironmentFlags } from "process";
 
 const args = process.argv.slice(2);
 
 const fs = require('fs');
 const path = require('path');
+
 let p: string;
+interface flagtype {
+    [key: string]: string | boolean;
+}
+let flags: flagtype = {};
+for (let [arg, argval] of args.entries()) {
+    if (!argval.startsWith('-')) continue;
+    if (argval.startsWith("--")) flags[argval.slice(2)] = args[Number(arg) + 1];
+    else if (argval.startsWith('-')) flags[argval.slice(1)] = true;
+}
+// for (let arg in args) {
+//     let argval = args[arg];
+//     if (!argval.startsWith('-')) continue;
+//     if (argval.startsWith("--")) flags[argval.slice(2)] = args[Number(arg) + 1];
+//     else if (argval.startsWith('-')) flags[argval.slice(1)] = true;
+// }
 if (RegExp("^C:[/\\\\]").test(args[0])) p = args[0];
 else if (args[0] === '') console.log("A file path must be provided!");
 else p = path.join('./', args[0]);
@@ -37,4 +54,5 @@ function readfile(path: string) {
     };
     console.log(file);
     console.log(config);
+    console.log(flags)
 })();
