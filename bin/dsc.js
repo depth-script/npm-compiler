@@ -46,28 +46,50 @@ if (RegExp("^C:[/\\\\]").test(args[0]))
 else if (args[0] === '')
     console.log("A file path must be provided!");
 else
-    p = path.join(__dirname, '../', args[0]);
+    p = path.join('./', args[0]);
 var filepath = p;
-var file;
-function readfile() {
+var file, config;
+function readfile(path) {
     return new Promise(function (resolve, reject) {
-        fs.readFile(filepath, "UTF8", function (err, data) {
-            if (err) {
-                console.log("An error occurred");
-                console.error(err);
-                reject(err);
-            }
-            resolve(data);
-        });
+        try {
+            fs.readFile(path, "UTF8", function (err, data) {
+                if (err) {
+                    console.log("An error occurred");
+                    console.error(err);
+                    reject(err);
+                }
+                resolve(data);
+            });
+        }
+        catch (e) { }
     });
 }
 (function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, readfile()];
+    var _a, _b, e_1, _c, _d;
+    return __generator(this, function (_e) {
+        switch (_e.label) {
+            case 0: return [4 /*yield*/, readfile(filepath)];
             case 1:
-                file = _a.sent();
+                file = _e.sent();
+                _e.label = 2;
+            case 2:
+                _e.trys.push([2, 4, , 6]);
+                _b = (_a = JSON).parse;
+                return [4 /*yield*/, readfile("./.dscconfig.json")];
+            case 3:
+                config = _b.apply(_a, [_e.sent()]);
+                return [3 /*break*/, 6];
+            case 4:
+                e_1 = _e.sent();
+                _d = (_c = JSON).parse;
+                return [4 /*yield*/, readfile(path.join("./", path.dirname(filepath), "/.dscconfig.json"))];
+            case 5:
+                config = _d.apply(_c, [_e.sent()]);
+                return [3 /*break*/, 6];
+            case 6:
+                ;
                 console.log(file);
+                console.log(config);
                 return [2 /*return*/];
         }
     });

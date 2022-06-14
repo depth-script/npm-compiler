@@ -11,22 +11,30 @@ const path = require('path');
 let p: string;
 if (RegExp("^C:[/\\\\]").test(args[0])) p = args[0];
 else if (args[0] === '') console.log("A file path must be provided!");
-else p = path.join(__dirname, '../', args[0]);
+else p = path.join('./', args[0]);
 const filepath: string = p;
-let file: any;
-function readfile() {
-    return new Promise<String>((resolve, reject) => {
-        fs.readFile(filepath, "UTF8", function (err, data) {
-            if (err) {
-                console.log("An error occurred");
-                console.error(err)
-                reject(err);
-            }
-            resolve(data);
-        });
+let file: any, config: any;
+function readfile(path: string) {
+    return new Promise<string>((resolve, reject) => {
+        try {
+            fs.readFile(path, "UTF8", function (err, data) {
+                if (err) {
+                    console.log("An error occurred");
+                    console.error(err)
+                    reject(err);
+                }
+                resolve(data);
+            });
+        } catch (e) { }
     })
 }
 (async () => {
-    file = await readfile();
-    console.log(file)
+    file = await readfile(filepath);
+    try {
+        config = JSON.parse(await readfile("./.dscconfig.json"));
+    } catch (e) {
+        config = JSON.parse(await readfile(path.join("./", path.dirname(filepath), "/.dscconfig.json")));
+    };
+    console.log(file);
+    console.log(config);
 })();
