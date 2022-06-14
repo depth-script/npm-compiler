@@ -88,12 +88,6 @@ finally {
     }
     finally { if (e_1) throw e_1.error; }
 }
-// for (let arg in args) {
-//     let argval = args[arg];
-//     if (!argval.startsWith('-')) continue;
-//     if (argval.startsWith("--")) flags[argval.slice(2)] = args[Number(arg) + 1];
-//     else if (argval.startsWith('-')) flags[argval.slice(1)] = true;
-// }
 if (RegExp("^C:[/\\\\]").test(args[0]))
     p = args[0];
 else if (args[0] === '')
@@ -107,11 +101,27 @@ function readfile(path) {
         try {
             fs.readFile(path, "UTF8", function (err, data) {
                 if (err) {
-                    console.log("An error occurred");
+                    console.log("An error occurred while reading the file");
                     console.error(err);
                     reject(err);
                 }
                 resolve(data);
+            });
+        }
+        catch (e) { }
+    });
+}
+function writefile(path, data) {
+    return new Promise(function (resolve, reject) {
+        try {
+            fs.open(path, "a+", function (err, fd) {
+                fs.write(fd, data, 0, data.length, "UTF8", function (err, writtenbytes) {
+                    if (err) {
+                        console.error("An error occurred while writing the file");
+                        reject(err);
+                    }
+                    resolve(writtenbytes);
+                });
             });
         }
         catch (e) { }
