@@ -66,6 +66,10 @@ var __read = (this && this.__read) || function (o, n) {
 var e_1, _a;
 exports.__esModule = true;
 var args = process.argv.slice(2);
+var data = {
+    filepath: '',
+    outputf: ''
+};
 var fs = require('fs');
 var path = require('path');
 var p;
@@ -94,7 +98,7 @@ else if (args[0] === '')
     console.log("A file path must be provided!");
 else
     p = path.join('./', args[0]);
-var filepath = p;
+data.filepath = p;
 var file, config;
 function readfile(path) {
     return new Promise(function (resolve, reject) {
@@ -115,7 +119,7 @@ function writefile(path, data) {
     return new Promise(function (resolve, reject) {
         try {
             fs.open(path, "a+", function (err, fd) {
-                fs.write(fd, data, 0, data.length, "UTF8", function (err, writtenbytes) {
+                fs.write(fd, data, 0, function (err, writtenbytes) {
                     if (err) {
                         console.error("An error occurred while writing the file");
                         reject(err);
@@ -131,9 +135,10 @@ function writefile(path, data) {
     var _a, _b, e_2, _c, _d;
     return __generator(this, function (_e) {
         switch (_e.label) {
-            case 0: return [4 /*yield*/, readfile(filepath)];
+            case 0: return [4 /*yield*/, readfile(data.filepath)];
             case 1:
                 file = _e.sent();
+                data.outputf = path.join("./", path.dirname(data.filepath), "/test.js");
                 _e.label = 2;
             case 2:
                 _e.trys.push([2, 4, , 6]);
@@ -145,7 +150,7 @@ function writefile(path, data) {
             case 4:
                 e_2 = _e.sent();
                 _d = (_c = JSON).parse;
-                return [4 /*yield*/, readfile(path.join("./", path.dirname(filepath), "/.dscconfig.json"))];
+                return [4 /*yield*/, readfile(path.join("./", path.dirname(data.filepath), "/.dscconfig.json"))];
             case 5:
                 config = _d.apply(_c, [_e.sent()]);
                 return [3 /*break*/, 6];
@@ -154,7 +159,35 @@ function writefile(path, data) {
                 console.log(file);
                 console.log(config);
                 console.log(flags);
+                if (flags["target"] === "es2015" ||
+                    flags["target"] === "es6" ||
+                    config["target"] === "es2015" ||
+                    config["target"] === "es6")
+                    compile.es2015();
                 return [2 /*return*/];
         }
     });
 }); })();
+var compile = {
+    es2015: function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        data["exps"] = file.split(';');
+                        if (!(flags["target"] === "es2015" ||
+                            flags["target"] === "es6" ||
+                            config["target"] === "es2015" ||
+                            config["target"] === "es6")) return [3 /*break*/, 2];
+                        return [4 /*yield*/, writefile(data.outputf, "\"use strict\";")];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2:
+                        console.log(data);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    }
+};
