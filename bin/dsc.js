@@ -92,12 +92,16 @@ const compile = {
     },
     es2015: function () {
         return __awaiter(this, void 0, void 0, function* () {
-            data["words"] = file.split(new RegExp("\\s+")).forEach((element) => {
-                element = element.split('{');
-            });
+            data["words"] = file.split(new RegExp("\\s+"));
             if (flags.strict || config.usestrict)
-                yield writefile(data.outputf, "\"use strict\";");
+                yield compile.usestrict();
+            ;
             console.log(data);
+        });
+    },
+    usestrict: function () {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield writefile(data.outputf, "\"use strict\";");
         });
     }
 };

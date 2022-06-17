@@ -31,7 +31,7 @@ else if (args[0] === '') console.log("A file path must be provided!");
 else p = path.join('./', args[0]);
 data.filepath = p;
 let file: any, config: any;
-function readfile(path: string) {
+function readfile(path: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
         try {
             fs.readFile(path, "UTF8", function (err: any, data: any) {
@@ -45,7 +45,7 @@ function readfile(path: string) {
         } catch (e) { }
     })
 }
-function writefile(path: string, data: string) {
+function writefile(path: string, data: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
         try {
             fs.open(path, "a+", function (err: any, fd: number) {
@@ -61,7 +61,7 @@ function writefile(path: string, data: string) {
     })
 }
 const compile = {
-    start: async function () {
+    start: async function (): Promise<void> {
         file = await readfile(data.filepath);
         data.outputf = path.join("./", path.dirname(data.filepath), "/test.js");
         try {
@@ -78,23 +78,24 @@ const compile = {
         config.target == "es6"
         ) compile.es2015();
     },
-    es2015: async function () {
-        data["words"] = file.split(new RegExp("\\s+")).forEach((element: string | any) => {
-            element = element.split('{')
-        });
-        if (flags.strict || config.usestrict) await writefile(data.outputf, "\"use strict\";");
+    es2015: async function (): Promise<void> {
+        data["words"] = file.split(new RegExp("\\s+"));
+        if (flags.strict || config.usestrict) await compile.usestrict();;
         console.log(data);
+    },
+    usestrict: async function (): Promise<void> {
+        await writefile(data.outputf, "\"use strict\";")
     }
 };
 const softwareinfo = {
     version: "0.0.0a",
     creator: "DepthScript (ItsTheWhale, Canned-Seagull23)",
-    showVersion: function () {
+    showVersion: function (): void {
         console.log(softwareinfo.version);
     }
 }
 const showhelp = {
-    showCommands: function () {
+    showCommands: function (): void {
         console.log(`DepthScript Compiler (dsc) v0.0.0a
 
         -Main Commands-
