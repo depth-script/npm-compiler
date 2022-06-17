@@ -1,3 +1,4 @@
 test
 node_modules
-.tsconfig.json
+bin/tsconfig.json
+.vscode
